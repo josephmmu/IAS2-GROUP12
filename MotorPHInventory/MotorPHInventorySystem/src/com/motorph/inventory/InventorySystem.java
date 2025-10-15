@@ -34,7 +34,7 @@ public class InventorySystem {
                     System.out.println("Goodbye!  " + currentUser);
                     return;
                 }
-                default -> System.out.println("Invalid option, please try again.");
+                default -> System.out.println("Invalid option: Please enter a number between 1 and 5.");
             }
         }
     }
@@ -51,10 +51,10 @@ public class InventorySystem {
                 System.out.println("Login successful. Welcome, " + currentUser + "!");
                 return true;
             } else {
-                System.out.println("Invalid credentials. Please try again.");
+                System.out.println("Login failed. Please check your username and password then try again.");
             }
         }
-        System.out.println("Too many failed attempts.");
+        System.out.println("Too many failed login attempts. Access denied. Please restart the system to try again.");
         return false;
     }
 
@@ -77,20 +77,20 @@ public class InventorySystem {
             System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\nEnter Engine Number (10 digits): ");
             String engineNumber = scanner.nextLine().trim();
             while (!isValidEngineNumber(engineNumber)) {
-                System.out.println("Invalid engine number. Enter exactly 10 digits (0-9).");
+                System.out.println("Invalid engine number. Must be exactly 10 digits (e.g., 1234567890). Please try again");
                 System.out.print("Enter Engine Number (10 digits): ");
                 engineNumber = scanner.nextLine().trim();
             }
 
             if (bst.search(engineNumber) != null) {
-                System.out.println("Duplicate engine number.");
+                System.out.println("Engine number already exists in inventory. Please enter a unique value. \n");
                 return;
             }
 
             System.out.print("Enter Brand: ");
             String brand = scanner.nextLine().trim();
             while (brand.isEmpty()) {
-                System.out.println("Brand cannot be empty.");
+                System.out.println("Invalid input. Brand name cannot be empty. Please enter a valid brand.");
                 System.out.print("Enter Brand: ");
                 brand = scanner.nextLine().trim();
             }
@@ -100,7 +100,7 @@ public class InventorySystem {
             System.out.println("Product added successfully:");
             bst.printRecordWithHeader(newRecord); // formatted single-record table
         } catch (Exception e) {
-            System.out.println("Input error. Please try again.");
+            System.out.println("Unexpected input error occured while adding product. Please check your entries and try again.");
         }
     }
 
@@ -114,17 +114,17 @@ public class InventorySystem {
                     return;
                 }
                 if (!isValidEngineNumber(engineNumber)) {
-                    System.out.println("Invalid engine number format. Must be exactly 10 digits.");
+                    System.out.println("Invalid engine number: Must be exactly 10 digits (e.g., 1234567890). Please try again.");
                     continue;
                 }
 
                 InventoryData record = bst.search(engineNumber);
                 if (record == null) {
-                    System.out.println("== Product not found ==\n");
+                    System.out.println("No product found. Please verify the engine number and try again.");
                     return;
                 }
                 if (!"On-hand".equalsIgnoreCase(record.getStatus())) {
-                    System.out.println("Product cannot be deleted (status is not 'On-hand').");
+                    System.out.println("Product cannot be deleted. Status must be 'On-hand'.");
                     return;
                 }
 
@@ -138,7 +138,7 @@ public class InventorySystem {
                     return;
                 }
                 if (!isValidEngineNumber(confirmNumber)) {
-                    System.out.println("Invalid confirmation format. Deletion cancelled.");
+                    System.out.println("Invalid confirmation: Engine number must be exactly 10 digits. Deletion cancelled.");
                     return;
                 }
 
@@ -149,12 +149,12 @@ public class InventorySystem {
                     System.out.println("Product deleted successfully:");
                     bst.printRecordWithHeader(record);
                 } else {
-                    System.out.println("Confirmation failed. Deletion cancelled.");
+                    System.out.println("Engine number mismatch. Deletion not confirmed and has been cancelled.");
                 }
                 return;
             }
         } catch (Exception e) {
-            System.out.println("Input error. Deletion cancelled.");
+            System.out.println("Unexpected error occurred during deletion. Operation cancelled.");
         }
     }
 
@@ -168,7 +168,7 @@ public class InventorySystem {
                     return;
                 }
                 if (!isValidEngineNumber(engineNumber)) {
-                    System.out.println("Invalid engine number format. Must be exactly 10 digits.");
+                    System.out.println("Invalid engine number: Must be exactly 10 digits (e.g., 1234567890). Please try again.");
                     continue;
                 }
 
@@ -177,17 +177,17 @@ public class InventorySystem {
                     System.out.println("Product found:");
                     bst.printRecordWithHeader(record);
                 } else {
-                    System.out.println("Product not found.");
+                    System.out.println("No product found with the given engine number. Please check and try again.");
                 }
                 return;
             }
         } catch (Exception e) {
-            System.out.println("Input error. Please try again.");
+            System.out.println("Unexpected error occurred during search. Please try again.");
         }
     }
 
     private void displayInventory() {
-        System.out.println("Inventory (sorted by Engine Number):");
+        System.out.println("Displaying inventory records sorted by Engine Number:");
         bst.inOrder();
     }
 
