@@ -6,13 +6,14 @@ import java.util.Scanner;
 public class InventorySystem {
     private final InventoryBST bst;
     private final Scanner scanner;
-    private final AuthService auth;           // add
-    private String currentUser;   
+    private final AuthService auth;
+    private String currentUser;
+    private String currentRole; 
 
     public InventorySystem() {
         bst = new InventoryBST();
         scanner = new Scanner(System.in);
-        auth = new AuthService();  // add
+        auth = new AuthService();
     }
 
     public void start() {
@@ -27,7 +28,13 @@ public class InventorySystem {
             String option = scanner.nextLine();
             switch (option) {
                 case "1" -> addStock();
-                case "2" -> deleteStock();
+                case "2" -> {
+                    if (!isAdmin()) {
+                        System.out.println("Access denied: Delete Stock is for Admins only.");
+                        break;
+                    }
+                    deleteStock();
+                }
                 case "3" -> searchStock();
                 case "4" -> displayInventory();
                 case "5" -> {
@@ -48,6 +55,7 @@ public class InventorySystem {
             String password = scanner.nextLine().trim();
             if (auth.authenticate(username, password)) {
                 currentUser = username;
+                currentRole = auth.getRole(username);
                 System.out.println("Login successful. Welcome, " + currentUser + "!");
                 return true;
             } else {
@@ -61,12 +69,15 @@ public class InventorySystem {
     private void displayMainMenu() {
         System.out.println("\n--- Main Menu ---");
         System.out.println("1. Add Stock");
-        System.out.println("2. Delete Stock");
+        System.out.println("2. Delete Stock" + (isAdmin() ? "" : " (Admin only)"));
         System.out.println("3. Search Inventory");
         System.out.println("4. Display Inventory (Sorted)");
         System.out.println("5. Exit \n");
     }
     
+    private boolean isAdmin() {
+        return "ADMIN".equalsIgnoreCase(currentRole);
+    }
 
     private boolean isValidEngineNumber(String value) {
         return value != null && value.matches("\\d{10}");
