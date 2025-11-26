@@ -3,7 +3,7 @@ package com.motorph.inventory;
 import java.sql.*;
 import java.util.*;
 
-class JdbcInventoryRepository implements InventoryRepository {
+public class JdbcInventoryRepository implements InventoryRepository {
 
     @Override
     public void insert(InventoryData d) throws Exception {

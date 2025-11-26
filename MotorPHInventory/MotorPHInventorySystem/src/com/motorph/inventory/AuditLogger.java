@@ -5,10 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
-class AuditLogger {
+public class AuditLogger {
     private static final SimpleDateFormat TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    void log(String user, String action, String engineNumber, String status, String level, String outcome, String details) {
+    public void log(String user, String action, String engineNumber, String status, String level, String outcome, String details) {
         String sql = "INSERT INTO audit_log(ts, user, action, engine_number, status, level, outcome, details) VALUES(?,?,?,?,?,?,?,?)";
         try (Connection c = DB.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -26,11 +26,11 @@ class AuditLogger {
         }
     }
 
-    void logException(String user, String action, String engineNumber, Exception ex) {
+    public void logException(String user, String action, String engineNumber, Exception ex) {
         log(user, action, engineNumber, null, null, "ERROR", ex.getClass().getSimpleName() + ": " + ex.getMessage());
     }
 
-    void printRecent(int limit) {
+    public void printRecent(int limit) {
         String sql = """
             SELECT ts, user, action, engine_number, outcome, details
             FROM audit_log
@@ -65,7 +65,7 @@ class AuditLogger {
 
     // Reconciliation & Exception reporting:
     // Validates simple business rules and prints a report; also logs a summary row.
-    void reconcileAndReport(String user, InventoryRepository repo) {
+    public void reconcileAndReport(String user, InventoryRepository repo) {
         final Set<String> ALLOWED_STATUS = Set.of("On-hand", "Old");
         final Set<String> ALLOWED_LEVEL  = Set.of("New", "Sold");
 

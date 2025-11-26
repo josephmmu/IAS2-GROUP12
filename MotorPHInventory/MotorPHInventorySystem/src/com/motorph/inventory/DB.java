@@ -3,7 +3,7 @@ package com.motorph.inventory;
 import java.nio.file.*;
 import java.sql.*;
 
-final class DB {
+public final class DB {
     private static final String URL = "jdbc:sqlite:data/motorph_inventory.db";
 
     static {
@@ -15,7 +15,7 @@ final class DB {
         }
     }
 
-    static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection(URL);
         ensureSchema(conn);
         return conn;
